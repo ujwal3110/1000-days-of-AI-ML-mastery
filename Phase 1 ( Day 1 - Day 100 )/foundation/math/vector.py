@@ -9,6 +9,8 @@ class Vector:
         - scalar multiplication
         - dot product
         - magnitude, normalization
+        - distance
+        - hadamard product
     """
 
     def __init__(self, data):
@@ -27,7 +29,9 @@ class Vector:
     def __getitem__(self, idx):
         return self.data[idx]
 
-    # ---------- Basic Ops ---------- #
+    # ------------------------------------------------------------
+    # Basic Ops
+    # ------------------------------------------------------------
     def add(self, other):
         _check_same_length(self, other)
         return Vector([a + b for a, b in zip(self.data, other.data)])
@@ -37,28 +41,51 @@ class Vector:
         return Vector([a - b for a, b in zip(self.data, other.data)])
 
     def scale(self, alpha):
+        if not isinstance(alpha, (int, float)):
+            raise TypeError("Scale factor must be a number.")
         return Vector([alpha * x for x in self.data])
 
-    # ---------- Dot product ---------- #
+    # ------------------------------------------------------------
+    # Dot product
+    # ------------------------------------------------------------
     def dot(self, other):
         _check_same_length(self, other)
         return sum(a * b for a, b in zip(self.data, other.data))
 
-    # ---------- Magnitude ---------- #
+    # ------------------------------------------------------------
+    # Magnitude
+    # ------------------------------------------------------------
     def magnitude(self):
         return (sum(x * x for x in self.data)) ** 0.5
 
-    # ---------- Normalize ---------- #
-    def normalize(self):
+    # ------------------------------------------------------------
+    # Normalize
+    # ------------------------------------------------------------
+    def normalize(self, eps=1e-12):
         mag = self.magnitude()
-        if mag == 0:
-            raise ZeroDivisionError("Cannot normalize a zero vector.")
+        if mag < eps:
+            raise ZeroDivisionError("Cannot normalize a zero or near-zero vector.")
         return self.scale(1.0 / mag)
 
+    # ------------------------------------------------------------
+    # Distance between vectors
+    # ------------------------------------------------------------
+    def distance(self, other):
+        _check_same_length(self, other)
+        return self.sub(other).magnitude()
 
-# ------------ Utility Function ------------ #
+    # ------------------------------------------------------------
+    # Hadamard (elementwise) product
+    # ------------------------------------------------------------
+    def hadamard(self, other):
+        _check_same_length(self, other)
+        return Vector([a * b for a, b in zip(self.data, other.data)])
+
+
+# ------------------------------------------------------------
+# Utility function
+# ------------------------------------------------------------
 
 def _check_same_length(v1, v2):
     if len(v1) != len(v2):
         raise ValueError("Vectors must have the same length!")
-
