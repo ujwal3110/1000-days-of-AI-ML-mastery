@@ -1,23 +1,24 @@
 class Matrix:
     """
-    A simple 2D matrix class to build the foundation of a mini-NumPy library.
-    Supports:
-        - shape (rows, cols)
-        - addition, subtraction
-        - scalar multiplication
-        - elementwise (Hadamard) product
-        - matrix-vector multiplication
-        - matrix-matrix multiplication
+    A simple 2D matrix class supporting:
+        - shape
+        - add, sub, scale
+        - hadamard
         - transpose
+        - matvec, matmul
+        - row/column slicing
+        - Frobenius norm
+        - outer product
+        - broadcasting for +,-,*,/
     """
 
     def __init__(self, data):
         if not isinstance(data, (list, tuple)):
-            raise TypeError("Matrix data must be a list of lists.")
+            raise TypeError("Matrix must be list of lists.")
 
-        row_lengths = {len(row) for row in data}
-        if len(row_lengths) != 1:
-            raise ValueError("All rows in the matrix must have the same length.")
+        row_lens = {len(row) for row in data}
+        if len(row_lens) != 1:
+            raise ValueError("All rows must have equal length.")
 
         self.data = [[float(x) for x in row] for row in data]
         self.rows = len(self.data)
@@ -33,36 +34,28 @@ class Matrix:
         return self.data[idx]
 
     # ------------------------------------------------------------
-    # Basic ops
+    # Basic Ops
     # ------------------------------------------------------------
     def add(self, other):
-        _check_same_shape(self, other)
-        return Matrix([
-            [a + b for a, b in zip(row_a, row_b)]
-            for row_a, row_b in zip(self.data, other.data)
-        ])
+        A, B = broadcast(self, other)
+        return Matrix([[a + b for a, b in zip(rowA, rowB)] for rowA, rowB in zip(A, B)])
 
     def sub(self, other):
-        _check_same_shape(self, other)
-        return Matrix([
-            [a - b for a, b in zip(row_a, row_b)]
-            for row_a, row_b in zip(self.data, other.data)
-        ])
+        A, B = broadcast(self, other)
+        return Matrix([[a - b for a, b in zip(rowA, rowB)] for rowA, rowB in zip(A, B)])
 
     def scale(self, alpha):
-        if not isinstance(alpha, (int, float)):
-            raise TypeError("Scale factor must be a number.")
         return Matrix([[alpha * x for x in row] for row in self.data])
 
-    # ------------------------------------------------------------
-    # Elementwise Hadamard product
-    # ------------------------------------------------------------
     def hadamard(self, other):
-        _check_same_shape(self, other)
-        return Matrix([
-            [a * b for a, b in zip(row_a, row_b)]
-            for row_a, row_b in zip(self.data, other.data)
-        ])
+        A, B = broadcast(self, other)
+        return Matrix([[a * b for a, b in zip(rowA, rowB)] for rowA, rowB in zip(A, B)])
+
+    # ------------------------------------------------------------
+    # Norm
+    # ------------------------------------------------------------
+    def norm(self):
+        return (sum(x * x for row in self.data for x in row)) ** 0.5
 
     # ------------------------------------------------------------
     # Transpose
@@ -71,55 +64,70 @@ class Matrix:
         return Matrix(list(map(list, zip(*self.data))))
 
     # ------------------------------------------------------------
-    # Matrix-vector multiplication
+    # Row/Column slicing
     # ------------------------------------------------------------
-    def matvec(self, vector):
+    def row(self, i):
+        return Matrix([self.data[i]])
+
+    def col(self, j):
+        return Matrix([[self.data[i][j]] for i in range(self.rows)])
+
+    # ------------------------------------------------------------
+    # matvec & matmul
+    # ------------------------------------------------------------
+    def matvec(self, v):
         from .vector import Vector
+        if len(v) != self.cols:
+            raise ValueError("Vector length mismatch.")
+        return Vector([sum(a * b for a, b in zip(row, v.data)) for row in self.data])
 
-        if vector.__class__.__name__ != "Vector":
-            raise TypeError("matvec expects a Vector.")
-
-        if self.cols != len(vector):
-            raise ValueError(
-                f"Matrix columns ({self.cols}) must match vector length ({len(vector)})."
-            )
-
-        result = []
-        for row in self.data:
-            dot_val = sum(a * b for a, b in zip(row, vector.data))
-            result.append(dot_val)
-
-        return Vector(result)
-
-    # ------------------------------------------------------------
-    # Matrix-matrix multiplication
-    # ------------------------------------------------------------
     def matmul(self, other):
-        if other.__class__.__name__ != "Matrix":
+        if not isinstance(other, Matrix):
             raise TypeError("matmul expects a Matrix.")
 
         if self.cols != other.rows:
-            raise ValueError(
-                f"Incompatible shapes: ({self.rows},{self.cols}) cannot "
-                f"multiply with ({other.rows},{other.cols})"
-            )
+            raise ValueError("Shape mismatch for matrix multiplication.")
 
         other_t = other.transpose()
-        result = []
+        return Matrix([
+            [sum(a * b for a, b in zip(row, col)) for col in other_t.data]
+            for row in self.data
+        ])
 
-        for row in self.data:
-            new_row = []
-            for col in other_t.data:
-                dot_val = sum(a * b for a, b in zip(row, col))
-                new_row.append(dot_val)
-            result.append(new_row)
-
-        return Matrix(result)
+    # ------------------------------------------------------------
+    # Outer Product
+    # ------------------------------------------------------------
+    @staticmethod
+    def outer(u, v):
+        from .vector import Vector
+        if not isinstance(u, Vector) or not isinstance(v, Vector):
+            raise TypeError("outer() requires two Vectors.")
+        return Matrix([[a * b for b in v.data] for a in u.data])
 
 
 # ------------------------------------------------------------
-# Utility
+# Broadcasting Engine
 # ------------------------------------------------------------
-def _check_same_shape(a, b):
-    if (a.rows != b.rows) or (a.cols != b.cols):
-        raise ValueError("Matrices must have the same shape!")
+def broadcast(A, B):
+    """Return expanded (A, B) lists of lists ready for elementwise ops."""
+    # scalar
+    if isinstance(B, (int, float)):
+        return (A.data, [[B] * A.cols for _ in range(A.rows)])
+    if isinstance(A, (int, float)):
+        return ([[A] * B.cols for _ in range(B.rows)], B.data)
+
+    # convert matrices to raw lists
+    A_raw, B_raw = A.data, B.data
+
+    if (A.rows == B.rows) and (A.cols == B.cols):
+        return (A_raw, B_raw)
+
+    # row vector broadcasting
+    if B.rows == 1 and B.cols == A.cols:
+        return (A_raw, [B_raw[0] for _ in range(A.rows)])
+
+    # column vector broadcasting
+    if B.cols == 1 and B.rows == A.rows:
+        return (A_raw, [[B_raw[i][0] for _ in range(A.cols)] for i in range(A.rows)])
+
+    raise ValueError(f"Cannot broadcast shapes {A.shape()} and {B.shape()}")
