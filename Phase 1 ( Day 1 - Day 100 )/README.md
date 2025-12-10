@@ -274,7 +274,7 @@ Understanding both at a geometric level gave me clarity.
 
 #### 🧪 Experiments
 
-🧪 Experiments
+
 🧩 1. Verified shapes across all operations
 Tested:
 - correct alignment
@@ -319,8 +319,126 @@ Slow steps, but foundational steps.
 Day 3 complete — and the heart of my mini-NumPy engine is now beating.
 
 
+## 📘 Day 04 — Matrix Norms, Slicing, Outer Products & Broadcasting Engine
 
 
+### 🔥 What I Learned Today
+🔥 What I Learned Today
+
+✅ 1. Matrix norms are the “size” of transformations
+Just like vector magnitude measures energy, matrix norms measure:
+- total transformation strength
+- stability of neural networks
+- gradient explosion risk
+I implemented Frobenius Norm, the matrix equivalent of vector magnitude.
+
+✅ 2. Row/column slicing = reading structure
+Neural networks access:
+- each row as a neuron
+- each column as feature dimension
+Understanding clean slicing makes linear algebra intuitive and prepares the architecture for batched operations.
+
+✅ 3. Outer product = building matrices from vectors
+Outer product forms the basis of:
+- attention score matrices
+- covariance matrices
+- weight updates in gradient descent
+- rank-1 approximations
+
+It is literally:
+geometry × geometry = transformation
+
+✅ 4. Broadcasting = the secret sauce of NumPy
+Broadcasting rules:
+- align shapes from the right
+- expand dimensions of size 1
+- operations apply across expanded dimensions
+  
+I built a simplified broadcasting engine that supports:
+- matrix + scalar
+- matrix + row vector
+- matrix + column vector
+- matrix + matrix (same or broadcastable shapes)
+
+This small feature unlocks 70% of NumPy’s magic.
+
+### 🔍 Deeper Understanding
+
+🧭 Frobenius norm as transformation power
+I learned that Frobenius norm approximates how much a matrix can stretch space.
+- High norm → unstable gradients
+- Low norm → smoother training
+
+🔦 Why slicing matters
+I now think of matrices as:
+- rows = samples
+- columns = features
+This intuition becomes crucial when building:
+- dense layers
+- embeddings
+- loss functions
+- statistical preprocessing
+
+🎯 Broadcasting = fewer loops, more math
+Transformers rely heavily on broadcasting for:
+- positional encodings
+- attention score scaling
+- mask expansion
+- batch operations
+
+My tiny broadcasting system is now good enough to support future neural-network layers.
+---
+
+### 🛠️ What I Built Today
+#### 📁 File
+**Directory:** `foundation/math/matrix.py`
+**File:** `vector.py` (extended)
+**File:** `matrix.py` (added features)
 
 
+#### 🧪 Experiments
+
+1. Norm stability tests
+Verified numeric stability using:
+- tiny values
+- huge values
+- random matrices
+
+2. Slicing visualizations
+
+- Plotted each row as a separate vector.
+- Saw how features separate by columns.
+- Very helpful for visualizing embeddings.
+
+3. Outer product intuition tests
+
+Generated:
+- key × query
+- noise × noise
+- feature × weight
+Saw how outer products form structured rank-1 matrices.
+
+4. Broadcasting correctness
+Tested:
+- scalar + matrix
+- matrix + row-vector
+- matrix + column-vector
+- incompatible shapes (error raised correctly)
+
+🎯 Plan for Tomorrow
+- build a full Dense Layer (weights, bias, forward)
+- implement activation functions (ReLU, sigmoid, tanh)
+- design a tiny autograd engine
+- set up a mini backprop pipeline
+- start preparing for optimizers (SGD)
+This will mark the transition from pure math → real neural-network components.
+
+🌅 Daily Reflection
+
+Today I built the mathematical machinery behind real deep-learning pipelines.
+Matrix norms taught me how networks stay stable, slicing revealed structure within data, outer products showed how attention scores are formed, and broadcasting unlocked vectorized computation.
+
+Each feature felt like adding a new muscle to my mini-NumPy engine — stronger, more flexible, and ready for neural network layers.
+
+Day 4 done — and the micro-NumPy engine is starting to feel alive.
 
