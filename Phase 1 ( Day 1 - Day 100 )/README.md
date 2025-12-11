@@ -442,3 +442,71 @@ Each feature felt like adding a new muscle to my mini-NumPy engine — stronger,
 
 Day 4 done — and the micro-NumPy engine is starting to feel alive.
 
+## 📘 Day 05 — micro-NumPy Engine 
+
+Welcome to **Day 5** of building a tiny deep-learning engine from scratch — a miniature NumPy + Autograd + Neural Network core, built line-by-line in pure Python.
+
+---
+
+## 🎯 Goals for Today
+
+- Build a fully functional **Dense Layer (Linear layer)**  
+- Implement activation functions:  
+  - ReLU  
+  - Sigmoid  
+  - Tanh  
+- Design a minimal but complete **autograd engine**  
+- Assemble a **backprop pipeline**  
+- Prepare the base for upcoming **optimizers (SGD)**  
+
+With these pieces, the project moves from “math operations” → “neural network foundations”.
+
+---
+
+## 🧠 What Was Built Today
+
+### ✔ Dense Layer  
+A fully trainable layer with:
+- weight matrix  
+- bias vector  
+- forward computation using matrix multiplication + broadcasting  
+
+### ✔ Activation Functions  
+All are differentiable and implement their own backward rules:
+- **ReLU**
+- **Sigmoid**
+- **Tanh**
+
+### ✔ Autograd Engine  
+A tiny version of PyTorch's reverse-mode autodiff:
+- Builds a dynamic computation graph
+- Stores parents + `_backward()` closures
+- Performs depth-first backpropagation
+
+---
+
+## 🏗 Code Structure
+├── engine/<br>
+│ ├── tensor.py<br>
+│ ├── ops.py<br>
+│ ├── autograd.py<br>
+│ └── layers.py<br>
+
+📌 Plans for tomorrow
+
+- Implement SGD optimizer
+- Add loss functions (MSE, BCE)
+- Build Sequential model wrapper
+- Train the first real model (XOR dataset)
+- Begin modularizing API for user-friendly use
+
+🌅 Daily Reflection
+
+Today marked the shift from raw mathematical ops into actual deep learning structures.
+Building Dense layers felt like assembling the skeletal frame of neural networks. Activations added life, and autograd became the nervous system.
+
+Every piece clicked together — and the engine started feeling like a functioning micro-framework.
+
+Day 5 complete — the tiny neural network core is born.
+
+
