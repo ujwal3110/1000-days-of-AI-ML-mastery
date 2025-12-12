@@ -323,7 +323,7 @@ Day 3 complete — and the heart of my mini-NumPy engine is now beating.
 
 
 ### 🔥 What I Learned Today
-🔥 What I Learned Today
+
 
 ✅ 1. Matrix norms are the “size” of transformations
 Just like vector magnitude measures energy, matrix norms measure:
@@ -509,4 +509,185 @@ Every piece clicked together — and the engine started feeling like a functioni
 
 Day 5 complete — the tiny neural network core is born.
 
+## 📘 Day 06 — micronumpy - Optimizers, Losses, Sequential & XOR Training
+
+Welcome to Day 6 of building a tiny deep-learning framework from scratch — a micro-NumPy + micro-Autograd engine in pure Python.
+
+Today marks the transition from just computing gradients → to actually training models.
+This is the moment where the math becomes a machine.
+
+🎯 Goals for Today
+✔ Implement an Optimizer
+- Added SGD with learning rate + optional momentum placeholder
+- Connected optimizer to trainable Tensor parameters
+
+✔ Add Loss Functions
+- MSELoss — for regression & XOR
+- BCELoss (simple) — for binary classification
+
+✔ Build a Modular Neural-Network API
+- Dense layer now supports trainability
+- Sequential container to stack layers like Keras / PyTorch
+
+✔ Write First Training Script
+- Trained a 2-layer network to solve the XOR problem
+
+### 🧠 What I Learned Today
+🔥 1. How models actually learn
+
+Today’s biggest insight:
+Backpropagation alone does nothing unless an optimizer updates parameters.
+SGD connected the gradient engine with the learning loop:
+
+`param = param - lr * grad`
+
+That single line transforms gradients into intelligence.
+
+🔥 2. Why loss functions define learning direction
+A loss is not just an error measurement — it is the source of the gradient signal.
+- MSE teaches networks to reduce squared error.
+- BCE pushes probabilities toward the correct class.
+Changing the loss = changing the behavior of the learning system.
+
+🔥 3. Sequential design shapes usability
+The Sequential class made training much more readable:
+
+`
+model = Sequential(
+    Dense(2, 4),
+    Tanh(),
+    Dense(4, 1),
+    Sigmoid()
+)
+`<br>
+
+🔥 4. XOR is the “Hello World” of Neural Networks
+
+XOR proves your framework supports:
+- Multi-layer nonlinear networks
+- Backprop through multiple layers
+- Parameter updates
+- Stable training dynamics
+It’s small, but it’s a real milestone.
+
+### 🛠️ What I Built Today
+
+✔ 1. SGD Optimizer
+- Iterates through model parameters
+- Applies gradient descent step
+- Resets gradients after update
+- Simple, clean, framework-friendly
+
+✔ 2. losses.py
+Included:
+- mse(pred, target)
+- bce(pred, target) (simple numerical stability)
+
+✔ 3. nn/sequential.py
+A small container that:
+- Stores layers
+- Automatically passes output to next layer
+- Aggregates parameters cleanly
+
+✔ 4. examples/xor_train.py
+
+A fully working training loop:
+- forward pass
+- loss compute
+- backward pass
+- optimizer step
+- prints loss every epoch
+- solves XOR in < 2000 iterations
+
+### 🧪 Experiments
+#### 🧩 XOR Learning
+
+Network:
+Input → Dense(2→4) → Tanh → Dense(4→1) → Sigmoid
+
+Results:
+- Loss drops smoothly
+- Model predicts XOR correctly
+- Verified gradients are flowing end-to-end
+- Observed sigmoid output converging toward {0,1}
+
+🧮 Gradient Sanity Tests
+- Compared manual gradients for MSE with autograd outputs
+- Verified parameter update magnitudes decrease when learning rate is lowered
+
+🔍 Hyperparameter Experiments
+- Tried learning rates {0.1, 0.01, 0.001}
+- Observed divergence at 0.5 → great intuition builder
+- Saw slow learning at 0.001
+- These experiments helped understand training stability.
+
+
+### 📁 File Structure (Day 6)<br>
+micronumpy/<br>
+├── engine/<br>
+│   ├── __init__.py<br>
+│   ├── tensor.py<br>
+│   ├── ops.py<br>
+│   └── activations.py<br>
+├── nn/<br>
+│   ├── __init__.py<br>
+│   └── layers.py<br>
+├── training/<br>
+│   ├── __init__.py<br>
+│   ├── losses.py<br>
+│   └── optim.py<br>
+├── examples/<br>
+│   └── xor_train.py<br>
+
+### 📌 Plans for Tomorrow (Day 7)
+🔥 Big focus: Training Infrastructure + More Layers
+Tomorrow’s goals:
+
+✔ Add More Optimizers
+- SGD + Momentum
+- RMSProp (maybe)
+- Adam (if possible)
+
+✔ Implement More Losses
+- Softmax + Cross-Entropy
+- Multi-class classification
+
+✔ Add More Layers
+- Dropout
+- Flatten
+- Softmax layer
+- Possibly Conv2D placeholders
+
+✔ Build a Minimal Trainer API
+
+Something like:
+- trainer = Trainer(model, optimizer, loss)
+- trainer.fit(X, y, epochs=...)
+
+✔ Build a toy dataset loader
+- Spiral dataset
+- Linear separable dataset
+- XOR multi-batch version
+
+### 🌅 Daily Reflection
+
+Today felt like breathing life into the framework.
+Until now we had:
+- math
+- tensors
+- autograd
+- layers
+But today—the model learned.
+
+Watching the loss drop and the XOR truth table go from random to correct was surreal.
+It wasn’t NumPy.
+It wasn’t PyTorch.
+It was my own code, piece by piece.
+
+Small engine.
+Real learning.
+Huge milestone.
+
+Day 6 done — and the micro-NumPy engine just trained its first neural network.
+The foundation for a real tiny deep-learning library is now alive.
 
