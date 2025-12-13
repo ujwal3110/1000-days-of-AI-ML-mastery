@@ -691,3 +691,109 @@ Huge milestone.
 Day 6 done — and the micro-NumPy engine just trained its first neural network.
 The foundation for a real tiny deep-learning library is now alive.
 
+
+
+## 📘 Day 07 — micronumpy - Training Infrastructure, Optimizers & Data Pipelines
+
+Day 7 pushes the micro-NumPy engine from basic training loops into a real training framework.
+
+Today was about infrastructure — the systems that make deep learning scalable, reusable, and elegant.
+
+🎯 Goals for Today
+✔ Advanced optimizers
+✔ Multi-class losses
+✔ More neural layers
+✔ Unified training API
+✔ Dataset loaders
+
+
+🧠 What I Learned Today
+
+🔥 1. Optimizers shape learning behavior
+- SGD is just the beginning.
+- Momentum smooths gradients
+- RMSProp adapts learning rates
+- Adam balances speed + stability
+- Each optimizer encodes a philosophy of learning.
+
+🔥 2. Training APIs matter as much as math
+Separating:
+- model
+- optimizer
+- loss
+- data
+- makes experimentation fast and readable.
+
+🔥 3. Data pipelines are part of the model
+The dataset loader controls:
+- batch structure
+- distribution
+- difficulty
+Bad data → bad learning, no matter how good the math is.
+
+
+🛠️ What I Built Today
+✔ Optimizers
+- SGD + Momentum
+- RMSProp
+- Adam
+
+✔ New Layers
+- Dropout
+- Flatten (future-ready)
+- Softmax
+
+✔ Losses
+- Softmax + Cross-Entropy
+
+✔ Trainer API
+- trainer = Trainer(model, optimizer, loss)
+- trainer.fit(X, y, epochs=1000)
+
+✔ Dataset Loader
+- XOR (multi-batch)
+- Spiral dataset
+- Linear-style placeholders
+
+
+📁 Updated Project Structure
+<br>
+micro_numpy/ <br>
+├── engine/ <br>
+├── nn/ <br>
+│   ├── advanced_layers.py <br>
+├── optim/ <br>
+│   ├── momentum.py <br>
+│   ├── rmsprop.py <br>
+│   ├── adam.py <br>
+├── losses/ <br>
+│   ├── softmax_ce.py <br>
+├── data/ <br>
+│   ├── datasets.py <br>
+├── trainer/ <br>
+│   ├── trainer.py <br>
+
+
+🧪 Experiments
+- Trained XOR using Adam
+- Compared SGD vs Momentum
+- Observed faster convergence with Adam
+- Validated Trainer API abstraction
+
+
+📌 Plans for Tomorrow (Day 8)
+- Convolution layers (Conv1D/Conv2D skeleton)
+- Batch Normalization
+- Weight initialization strategies
+- Model saving/loading
+- Evaluation metrics
+
+
+🌅 Daily Reflection
+
+Today I didn’t just train models —
+I built the system that trains models.
+
+This is where deep learning stops being a script and starts being an engine.
+
+Day 7 complete — and micro-NumPy now feels like a real framework.
