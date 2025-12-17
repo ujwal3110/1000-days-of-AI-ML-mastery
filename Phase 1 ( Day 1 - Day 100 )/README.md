@@ -913,3 +913,178 @@ Today felt like building the industrial tools of deep learning.
 Day 8 complete —
 and micro-NumPy is no longer a toy.
 It’s becoming an engine.
+
+
+### 📘 Day 09 Backpropagation, Stability & Verification
+
+Day 9 was about correctness, trust, and numerical discipline.
+Up to Day 8, the engine could run.
+From Day 9 onward, the engine can be trusted.
+Today I implemented the machinery that separates toy ML code from real deep-learning systems:
+
+- Backpropagation for convolution and normalization
+- Gradient checking
+- Numerical stability tests
+- Performance profiling hooks
+
+This is the day where the engine learned how to debug itself.
+
+#### 🎯 Goals for Today
+
+✔ Backpropagation for Conv layers
+✔ Batch Normalization backward pass
+✔ Gradient checking (numerical vs analytic)
+✔ Numerical stability tests
+✔ Performance profiling utilities
+
+#### 🧠 What I Learned Today
+
+🔥 1. Backpropagation is geometry flowing backward
+
+Convolution backprop revealed something important:
+Gradients are not symbols — they are signals flowing backward through geometry.
+
+Each output gradient:
+- fans out into input space
+- accumulates weight gradients
+- respects spatial locality
+
+Once written manually, CNN backprop stopped feeling “advanced” and started feeling inevitable.
+
+🔥 2. BatchNorm backward is controlled chaos
+
+BatchNorm backward is deceptively complex:
+- mean affects everything
+- variance couples all inputs
+- gradients must be distributed evenly
+
+Writing it by hand taught me why:
+- BatchNorm stabilizes training
+- but complicates backprop
+- and why many modern models prefer RMSNorm / LayerNorm
+
+🔥 3. Gradient checking is non-negotiable
+
+Autograd without gradient checking is guesswork.
+
+- Numerical gradient checking:
+- approximates gradients using finite differences
+- validates every backward rule
+- catches silent bugs that don’t crash but poison training
+
+This is how real frameworks are verified.
+
+🔥 4. Numerical stability is engineering, not math
+
+I learned that:
+- log(0)
+- exp(large)
+- division by tiny numbers
+- are not edge cases — they are guaranteed to happen.
+ -Stable softmax, log clipping, and epsilon guards are survival tools.
+
+🔥 5. Performance must be measured, not assumed
+
+Adding a profiler made it obvious:
+- Python loops are slow
+- Conv layers dominate runtime
+- Backward pass costs more than forward
+This sets the stage for vectorization and kernel optimization.
+
+🛠️ What I Built Today
+
+✔ Convolution Backpropagation
+Manual Conv1D backward pass
+Explicit gradient flow to:
+- input
+- kernel weights
+- grad_output → grad_input
+- grad_output → grad_kernel
+
+✔ BatchNorm Backward Pass
+
+Mean and variance gradients
+- Proper gradient redistribution
+- Matches standard deep-learning derivations
+
+✔ Gradient Checking Utility
+
+- Numerical verification using finite differences:
+- grad_check(f, x, analytic_grad)
+
+
+Ensures:
+- backward math is correct
+- autograd is trustworthy
+
+✔ Numerical Stability Tests
+- Stable softmax
+- Safe logarithms
+- Epsilon-based guards
+
+Prevents:
+- NaNs
+- Infs
+- exploding loss
+
+✔ Performance Profiler
+
+Lightweight timing utility:
+- prof.start("forward")
+- model(x)
+- prof.stop("forward")
+
+
+Allows:
+- bottleneck discovery
+- optimization planning
+
+📁 New Files Added (Day 9)<br>
+micro_numpy/<br>
+├── nn/<br>
+│   ├── conv_backward.py<br>
+│   ├── batchnorm_backward.py<br>
+│<br>
+├── utils/<br>
+│   ├── grad_check.py<br>
+│   ├── stability.py<br>
+│   ├── profiler.py<br>
+│<br>
+└── examples/<br>
+    ├── grad_check_conv.py<br>
+
+All files are additive and fully compatible with Days 1–8.
+
+🧪 Experiments Performed
+
+- Verified Conv1D backward via numerical gradient checking
+- Tested BatchNorm backward on synthetic data
+- Stress-tested softmax/log with extreme values
+- Measured forward vs backward runtime
+- Identified Conv as primary performance bottleneck
+
+📌 Plans for Tomorrow (Day 10)
+
+- Optimization & Scaling
+- Conv2D backward implementation
+- Vectorized convolution (im2col)
+- Reduce Python loops
+- Memory optimization
+- Prepare for GPU-style kernels
+
+Optional: mixed-precision groundwork
+
+🌅 Daily Reflection
+
+Today felt like becoming an engineer instead of a user.
+
+- Writing backprop by hand removed the mystery.
+- Gradient checking gave me confidence.
+- Stability checks gave me safety.
+- Profiling gave me direction.
+
+This is the invisible work behind every real ML framework —
+the work that makes models reliable instead of lucky.
+
+Day 9 complete.
+micro-NumPy now knows how to learn, how to verify, and how to fail safely.
