@@ -1090,7 +1090,7 @@ Day 9 complete.
 micro-NumPy now knows how to learn, how to verify, and how to fail safely.
 
 
-### 📘 Day 09 Optimization, Vectorization & Scaling
+### 📘 Day 10 Optimization, Vectorization & Scaling
 
 Day 10 was about making the engine faster, leaner, and closer to real-world deep learning systems.
 
@@ -1191,18 +1191,18 @@ Although still CPU-based, the engine is now structured so that:
 This separation is critical for real systems.
 
 📁 Files Touched / Extended (Day 10)
-
+<br>
 micro_numpy/<br>
 │<br>
 ├── nn/<br>
-│   ├── im2col.py            # NEW: im2col utilities<br>
-│   ├── conv_fast.py         # NEW: optimized Conv1D using im2col<br>
+│   ├── im2col.py      <br>
+│   ├── conv_fast.py    <br>
 │<br>
-├── utils/<br><br>
-│   ├── benchmark.py         # NEW: performance comparison<br>
+├── utils/<br>
+│   ├── benchmark.py      <br>
 │<br>
 └── examples/<br>
-    ├── conv_speed_test.py   # NEW<br>
+    ├── conv_speed_test.py  <br>
 
 - No breaking changes
 - No API rewrites
