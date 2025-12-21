@@ -1268,3 +1268,103 @@ This is the same thinking used in:
 Day 10 complete.
 micro-NumPy is no longer just learning —
 it’s starting to perform.
+
+### 📘 Day 11 Vectorized CNNs & Engine Architecture
+
+Day 11 marks a shift from writing operations to designing an engine.
+Today was about:
+- abstraction
+- scalability
+- memory
+- and preparing micro-NumPy for serious growth
+
+🎯 Goals for Today
+
+✔ Vectorized Conv2D forward
+✔ Conv2D backward pass
+✔ Backend abstraction
+✔ Memory reuse concepts
+✔ Cleaner kernel interfaces
+
+🧠 What I Learned Today
+🔥 1. CNNs are matrix multiplications in disguise
+Using im2col made it obvious:
+Convolutions are just structured GEMMs.
+This insight connects CNNs directly to:
+- BLAS
+- GPUs
+- Transformers
+- attention kernels
+
+🔥 2. Backends are the real engine
+
+Separating what we compute from how we compute it enables:
+- CPU today
+- NumPy tomorrow
+- CUDA later
+
+This is how PyTorch and TensorFlow scale.
+
+🔥 3. Memory is performance
+Memory reuse:
+- reduces allocations
+- improves cache locality
+- stabilizes runtime
+Training speed isn’t just math — it’s memory movement.
+
+🔥 4. Clean interfaces enable growth
+Once ops follow a clear contract:
+- optimization becomes easier
+- debugging becomes local
+- extension becomes safe
+
+🛠️ What I Built Today
+✔ Conv2D via im2col
+Forward pass using matrix multiplication
+Compatible with existing Tensor engine
+
+✔ Conv2D Backward
+Vectorized gradient computation
+Scales with input size
+
+✔ Backend Layer
+CPU matmul abstraction
+
+Future NumPy / CUDA swap ready
+✔ Memory Buffer Pool
+
+Reusable buffers
+Reduced allocation overhead
+
+📁 New Files Added (Day 11)
+- backends/cpu.py
+- nn/conv2d_im2col.py
+- nn/conv2d_backward.py
+- utils/memory.py
+- examples/conv2d_demo.py
+
+🧪 Experiments
+- Verified Conv2D correctness
+- Compared naive vs vectorized conv
+- Confirmed gradient flow
+- Measured allocation reductions
+
+📌 Plans for Tomorrow (Day 12)
+
+- NumPy backend implementation
+- Mixed precision groundwork
+- Optimized Conv backward via GEMM
+- Trainer performance tuning
+- Model export format
+
+🌅 Daily Reflection
+
+Day 11 felt like stepping into framework design.
+Instead of asking:
+“Does this work?”
+I started asking:
+“Will this scale?”
+That shift changes everything.
+
+micro-NumPy is no longer just educational —
+it’s becoming an engine with a future.
