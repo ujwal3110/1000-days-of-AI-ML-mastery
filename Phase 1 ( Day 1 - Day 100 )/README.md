@@ -1368,3 +1368,230 @@ That shift changes everything.
 
 micro-NumPy is no longer just educational —
 it’s becoming an engine with a future.
+
+
+### Day 12: NumPy Backend, Mixed Precision & Training Acceleration
+
+Day 12 marks the transition from a pure-Python learning engine to a hybrid research-grade system.
+
+Today I introduced:
+- A NumPy backend
+- Backend switching (CPU ↔ NumPy)
+- Mixed-precision groundwork (FP16 concepts)
+- Faster convolution + matrix operations
+- Training loop acceleration
+This is how real frameworks bridge correctness → performance → scalability.
+
+🎯 Goals for Today
+
+✔ Add NumPy backend (drop-in replacement)
+✔ Backend selection mechanism
+✔ Mixed-precision (FP32 / FP16 awareness)
+✔ Faster matmul & conv execution
+✔ Preserve autograd correctness
+
+🧠 What I Learned Today
+🔥 1. Backends define performance, not models
+
+Once models are backend-agnostic:
+- performance becomes swappable
+- math stays untouched
+- experimentation accelerates
+This separation is the core reason PyTorch scales.
+
+🔥 2. NumPy is a CPU superpower
+
+Replacing Python loops with NumPy:
+- unlocks vectorization
+- uses optimized BLAS
+- drastically reduces Python overhead
+Same math. Orders-of-magnitude faster.
+
+🔥 3. Mixed precision is about numerical discipline
+
+FP16 isn’t “just smaller floats”.
+It requires:
+- careful scaling
+- stability guards
+- loss scaling awareness
+
+Day 12 lays the foundation, not shortcuts.
+
+🔥 4. Acceleration must preserve gradients
+
+Speed without correctness is useless.
+Every optimization today was validated against:
+- previous outputs
+- gradient flow
+- numerical stability tests
+
+micro_numpy/<br>
+│<br>
+├── backends/<br>
+│   ├── numpy_backend.py  <br>   
+│   ├── backend.py    <br>       
+│<br>
+├── utils/<br>
+│   ├── precision.py   <br>       
+│<br>
+└── examples/<br>
+    ├── backend_switch.py  <br>   
+
+🧪 Experiments Performed
+- Verified identical outputs CPU vs NumPy
+- Timed matmul speedups
+- Tested FP16 → FP32 stability
+- Ensured no gradient corruption
+- Ran previous XOR model with NumPy backend
+
+📌 Plans for Tomorrow (Day 13)
+- Full AMP (automatic mixed precision)
+- Loss scaling during backprop
+- NumPy Conv2D backend
+- Attention kernel groundwork
+- Export trained models (ONNX-like idea)
+
+🌅 Daily Reflection
+
+Day 12 felt like unlocking industrial horsepower.
+
+The math didn’t change.
+The models didn’t change.
+Only the execution engine did.
+
+That’s the key insight behind modern ML frameworks:
+
+Separate math from execution.
+
+micro-NumPy is no longer slow by default —
+it can now choose how fast it wants to be.
+
+Day 12 complete.
+The engine now scales.
+
+
+### 📘 Day 13 — Mixed Precision, Conv2D Backend & Attention Groundwork
+
+Building performance-aware deep learning systems from first principles.
+
+🔥 What I Learned Today
+✅ 1. Why Mixed Precision Exists
+
+Modern deep learning doesn’t use FP32 everywhere.
+- FP16 → faster, lower memory
+- FP32 → stable accumulation
+- AMP = best of both
+
+I learned:
+- Why gradients underflow in FP16
+- Why loss scaling is mandatory
+- Why forward ≠ backward precision
+
+✅ 2. Loss Scaling is the Key to AMP
+
+Without loss scaling:
+- gradients → 0
+- training silently fails
+
+With loss scaling:
+- gradients amplified
+- divided back safely after backprop
+
+This is exactly how PyTorch AMP works internally.
+
+✅ 3. Conv2D Is Just Structured Dot Products
+
+Conv2D is:
+- sliding windows
+- local dot products
+- weight sharing
+
+Implementing it from NumPy clarified:
+- im2col logic
+- memory cost
+- why cuDNN exists
+
+✅ 4. Attention Is Matrix Math + Softmax
+
+Attention isn’t magic.
+It is:
+- Q · Kᵀ / √d → softmax → · V
+
+Today I laid the kernel foundation, not full Transformer hype.
+
+✅ 5. Exporting Models Is About Graph + Weights
+
+Exporting a model means:
+- serializing parameters
+- storing computation structure
+- separating execution from definition
+This is how ONNX works conceptually.
+
+
+🧠 Deeper Understanding
+AMP Is a Systems Problem
+AMP is not ML — it’s:
+- numerical analysis
+- hardware-aware design
+- careful gradient flow control
+This moved my thinking closer to real framework engineering.
+
+Conv & Attention Are Performance Bottlenecks:
+
+I now understand why:
+- inference engines fuse ops
+- attention kernels are hand-written
+- memory layout matters more than math
+
+micro_numpy/<br>
+│<br>
+├── engine/<br>
+│   ├── amp.py  <br>            
+│   ├── loss_scaler.py  <br>    
+│<br>
+├── nn/<br>
+│   ├── attention.py  <br>      
+│<br>
+├── utils/<br>
+│   ├── export.py  <br>        
+│<br>
+└── examples/<br>
+    ├── amp_demo.py<br>
+    ├── conv2d_demo.py<br>
+
+🧪 Experiments Performed
+1️⃣ AMP Stability Test
+- trained small model with FP16
+- observed gradient underflow
+- fixed using loss scaling
+
+2️⃣ Conv2D Sanity Check
+
+- single filter edge detection
+- compared with manual computation
+
+3️⃣ Attention Score Inspection
+
+- visualized attention weights
+- confirmed row-wise softmax
+
+🎯 Plan for Tomorrow (Day 14)
+
+Conv2D backward pass
+- Attention backward
+- Fused kernels (Conv + ReLU)
+- Inference-only execution mode
+
+Memory reuse & static planning
+
+🌅 Daily Reflection
+
+Today felt like crossing from ML learning into ML systems engineering.
+- Mixed precision showed me why performance is fragile.
+- Conv2D taught me why kernels matter more than equations.
+- Attention reminded me that transformers are geometry + softmax.
+This engine is no longer a toy — it’s becoming a real framework skeleton.
+
+Day 13 complete.
+The engine is faster, sharper, and closer to production reality.
+
