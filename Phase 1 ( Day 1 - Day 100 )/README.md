@@ -1595,3 +1595,87 @@ This engine is no longer a toy — it’s becoming a real framework skeleton.
 Day 13 complete.
 The engine is faster, sharper, and closer to production reality.
 
+🧊  Freeze micro-NumPy 
+
+✅ micro-NumPy v1.0
+
+- Core math
+- Vector (complete API)
+- Matrix (basic ops)
+- Broadcasting (limited, explicit)
+- Autograd
+- Reverse-mode autodiff
+- Scalar + tensor gradients
+- Backprop pipeline
+- Neural Network
+- Dense layer
+- Activations (ReLU, Sigmoid, Tanh)
+- Losses (MSE, BCE, Softmax+CE)
+- Optimizers (SGD, Momentum, Adam)
+- Systems
+- Inference mode
+- AMP + loss scaling
+- Conv2D forward + backward
+- Attention forward + backward
+- Fused kernels (manual)
+- Usability
+- Sequential model
+- Trainer API
+- XOR + small demos
+- Model save/load
+
+❌ Explicitly OUT of scope for v1.0
+
+Document this clearly:
+
+- CUDA / GPU
+- Distributed training
+- Dynamic control-flow gradients
+- Production-grade Conv optimizations
+- FlashAttention
+- Full ONNX compatibility
+
+✅ Final Recommended Structure
+micro_numpy/<br>
+│<br>
+├── engine/<br>
+│   ├── tensor.py<br>
+│   ├── autograd.py<br>
+│   ├── amp.py<br>
+│   ├── loss_scaler.py<br>
+│   ├── inference.py<br>
+│<br>
+├── nn/<br>
+│   ├── layers.py   <br>     # Dense, Dropout, Flatten
+│   ├── activations.py<br>
+│   ├── losses.py<br>
+│   ├── optimizers.py<br>
+│   ├── conv.py<br>
+│   ├── attention.py<br>
+│   ├── fused.py<br>
+│<br>
+├── data/<br>
+│   ├── datasets.py<br>
+│<br>
+├── utils/<br>
+│   ├── export.py<br>
+│   ├── checks.py<br>
+│<br>
+├── examples/<br>
+│   ├── xor_train.py<br>
+│   ├── amp_demo.py<br>
+│   ├── conv_demo.py<br>
+│<br>
+├── tests/<br>
+│   ├── test_autograd.py<br>
+│   ├── test_layers.py<br>
+│<br>
+├── README.md<br>
+├── DESIGN.md<br>
+├── CHANGELOG.md<br>
+└── VERSION<br>
+
+
+
+
+
